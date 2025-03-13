@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BallCollisionSounds : MonoBehaviour
@@ -20,9 +18,7 @@ public class BallCollisionSounds : MonoBehaviour
     }
 
     private void PlayRandomSound(AudioClip[] soundList)    {
-        // Verifica se a lista de sons não está vazia
         if (soundList.Length > 0) {
-            // Escolhe um som aleatório da lista e toca
             AudioClip randomSound = soundList[Random.Range(0, soundList.Length)];
             audioSource.PlayOneShot(randomSound);
         }
