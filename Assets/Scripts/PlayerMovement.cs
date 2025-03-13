@@ -87,6 +87,8 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
             rigidbody.AddForce(aimPivotTransform.forward * ballLaunchForce, ForceMode.Impulse);
+            isShootingMode = !isShootingMode;
+            
         }
     }
 }
