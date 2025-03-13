@@ -5,14 +5,11 @@ using UnityEngine;
 public class BallMovement : MonoBehaviour
 
 {
-    [SerializeField]
-    private float speed = 10f; // Velocidade da bola, ajustável pelo Inspector
+    [SerializeField]    private float speed = 10f; // Velocidade da bola, ajustável pelo Inspector
 
-    [SerializeField]
-    private Transform aimArrow; // Referência à seta indicadora
+    [SerializeField]    private Transform aimArrow; // Referência à seta indicadora
 
-    [SerializeField]
-    private float rotationSpeed = 100f; // Velocidade de rotação da seta
+    [SerializeField]    private float rotationSpeed = 100f; // Velocidade de rotação da seta
 
     private Rigidbody rb;
 
@@ -51,8 +48,6 @@ public class BallMovement : MonoBehaviour
     {
         // A direção é a frente (forward) da seta
         Vector3 direction = aimArrow.forward;
-
-        // Define a velocidade da bola na direção da seta
         rb.velocity = direction * speed;
     }
 }

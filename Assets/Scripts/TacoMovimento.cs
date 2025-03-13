@@ -11,25 +11,22 @@ public class BastaoController : MonoBehaviour
     public Rigidbody cueRigidbody; // Rigidbody do taco
     public Collider cueCollider; // Collider do taco
     private Vector3 initialPosition; // Posição inicial do taco
-    private PlayerMovement playerMovement; // Componente de controle do player
+    [SerializeField] PlayerMovement playerMovement; // Componente de controle do player
     private float currentShootForce = 0f; // Força de tiro atual
     private bool isThrusting = false; // Se está estocando
     private Vector3 cueRestPosition; // Posição de descanso do taco
     private bool hasHit = false; // Verifica se o taco já bateu na bola
     private bool isReturning = false; // Se o taco está retornando à posição inicial
 
-    void Start()
-    {
-        // Armazena a posição inicial do taco
+    void Start()    {
+
         initialPosition = transform.localPosition;
-        // Acessa o componente PlayerMovement para verificar o estado
-        playerMovement = GetComponentInParent<PlayerMovement>();
+
     }
 
-    void Update()
-    {
+    void Update()    {
         // O movimento do taco só é permitido se o botão direito do mouse estiver pressionado e o estado for de controle da arma
-        if (playerMovement.isWeaponMode)
+        if (playerMovement.isShootingMode)
         {
             HandleWeaponMovement();
             HandleAimingAndShooting();
