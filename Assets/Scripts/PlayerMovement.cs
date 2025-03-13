@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private Transform aimPivotTransform;
     private float xRotation = 0f;
     private float yRotation = 0f;
+    private float xAimRotation = 0f;
+    private float yAimRotation = 0f;
     public bool isShootingMode = false; // Modo de Controle de Bola
     void Start()
     {
@@ -24,7 +26,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()    {
 
-        checkForChangeBetweenModes();
+        if (Input.GetMouseButtonDown(1))
+            ChangeBetweenModes();
 
         if (isShootingMode){
             HandleAimingAndShooting();
@@ -34,9 +37,10 @@ public class PlayerMovement : MonoBehaviour
         HandleMovement();
     }
 
-    private void checkForChangeBetweenModes(){
+    private void ChangeBetweenModes(){
         // Alterna entre os modos de andar e mirar o taco com o clique do botão direito do mouse
-        if (Input.GetMouseButtonDown(1)) isShootingMode = !isShootingMode;
+        isShootingMode = !isShootingMode;
+        aimPivot.SetActive(isShootingMode);
     }
 
     void HandleMouseLook() {
@@ -44,10 +48,10 @@ public class PlayerMovement : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation += mouseX;
-        yRotation -= mouseY; // Inverte... pq sim
-        yRotation = Mathf.Clamp(yRotation, -90f, 90f); // Playtest indica que é melhor colocar um limite
-        playerTransform.localRotation = Quaternion.Euler(yRotation, xRotation, 0f);
+        xAimRotation += mouseX;
+        yAimRotation -= mouseY; // Inverte... pq sim
+        yAimRotation = Mathf.Clamp(yAimRotation, -90f, 90f); // Playtest indica que é melhor colocar um limite
+        playerTransform.localRotation = Quaternion.Euler(yAimRotation, xAimRotation, 0f);
     }
 
     void HandleMovement()
@@ -60,7 +64,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space)) moveY = 1f;      // Move para cima (Y positivo)
 
         // Calcula a direção do movimento baseado na orientação do jogador
-        Vector3 moveDirection = transform.right * moveX + transform.forward * moveZ + transform.up * moveY;
+        Vector3 moveDirection = playerTransform.right * moveX + playerTransform.forward * moveZ + playerTransform.up * moveY;
         playerTransform.position += moveDirection * moveSpeed * Time.deltaTime;
     }
 
@@ -87,8 +91,8 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
             rigidbody.AddForce(aimPivotTransform.forward * ballLaunchForce, ForceMode.Impulse);
-            isShootingMode = !isShootingMode;
-            
+            ChangeBetweenModes();
+
         }
     }
 }
