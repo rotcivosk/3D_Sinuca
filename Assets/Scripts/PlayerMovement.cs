@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -5,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float mouseSensitivity = 100f;
     [SerializeField] private GameObject aimPivot;
+    [SerializeField] private BallController ballController;
     public Transform ball;          // Arraste aqui o Transform da bola no Inspetor
     public float ballRotationSpeed = 100f;
     public float ballLaunchForce = 10f;
@@ -77,22 +79,34 @@ public class PlayerMovement : MonoBehaviour
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
         xRotation += mouseX;
         yRotation -= mouseY;
-        //yRotation = Mathf.Clamp(yRotation, -90f, 90f); // Playtest indica que é melhor colocar um limite
-        //xRotation = Mathf.Clamp(xRotation, -90f, 90f);
         aimPivotTransform.localRotation = Quaternion.Euler(yRotation, xRotation, 0f);
 
-        // Controle de lançamento da bola
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            // Garante que a bola tenha um Rigidbody.
-            Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
+        // Controle de lançamento da bola com o clique esquerdo do mouse
 
-            if (rigidbody == null){
-                Debug.LogError("A bola não possui um Rigidbody anexado!");
-                return;
-            }
-            rigidbody.AddForce(aimPivotTransform.forward * ballLaunchForce, ForceMode.Impulse);
-            ChangeBetweenModes();
-
+        if (Input.GetMouseButton(0)) {
+            ChargeLaunch();
         }
+        if (Input.GetMouseButtonUp(0)) {
+            LaunchBall();
+        }
+
+    }
+    private void ChargeLaunch(){
+        // Aumenta a força de lançamento da bola enquanto o botão esquerdo do mouse é pressionado
+        ballLaunchForce += Time.deltaTime * 10f;
+        ballLaunchForce = Mathf.Clamp(ballLaunchForce, 10f, 100f); // Limita a força de lançamento
+    }
+
+    private void LaunchBall(){
+        // Garante que a bola tenha um Rigidbody.
+        Rigidbody rigidbody = ball.GetComponent<Rigidbody>();
+
+        if (rigidbody == null) {
+            Debug.LogError("A bola não possui um Rigidbody anexado!");
+            return;
+        }
+        rigidbody.AddForce(aimPivotTransform.forward * ballLaunchForce, ForceMode.Impulse);
+        ChangeBetweenModes();
+        ballController.StartBallMovement();
     }
 }

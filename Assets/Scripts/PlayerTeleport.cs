@@ -16,24 +16,14 @@ public class PlayerTeleport : MonoBehaviour
         }
     }
 
-    private void TeleportBehindWhiteBall()
-    {
+    private void TeleportBehindWhiteBall()    {
         if (whiteBall != null)
         {
-
             Vector3 forwardDirection = transform.forward;
-
-            // Calcula a posição desejada para o jogador, atrás da bola branca na direção oposta ao forward
             Vector3 targetPosition = whiteBall.position - forwardDirection * offsetDistance;
-
-            // Move o jogador para a nova posição
             transform.position = targetPosition;
-
-            // Faz o jogador olhar diretamente para a bola branca
             transform.LookAt(whiteBall);
-        }
-        else
-        {
+        }        else        {
             Debug.LogWarning("A referência à bola branca não foi definida.");
         }
     }
