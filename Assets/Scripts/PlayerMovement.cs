@@ -8,7 +8,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject aimPivot;
     [SerializeField] private BallController ballController;
     public Transform ball;          // Arraste aqui o Transform da bola no Inspetor
-    public float ballRotationSpeed = 100f;
     public float ballLaunchForce = 10f;
     private Transform playerTransform;
     private Transform aimPivotTransform;
@@ -17,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     private float xAimRotation = 0f;
     private float yAimRotation = 0f;
     public bool isShootingMode = false; // Modo de Controle de Bola
+    private float offsetDistance = 2.0f;
     void Start()
     {
         playerTransform = GetComponent<Transform>();
@@ -33,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (isShootingMode){
             HandleAimingAndShooting();
+            HandleTeleportWhileAiming();
             return;
         }
         HandleMouseLook();
@@ -71,7 +72,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-
     void HandleAimingAndShooting() {
 
         // Controle de mira
@@ -90,6 +90,21 @@ public class PlayerMovement : MonoBehaviour
             LaunchBall();
         }
 
+    }
+    private void HandleTeleportWhileAiming(){
+        if (Input.GetKeyDown(KeyCode.F)){
+            TeleportBehindWhiteBall();
+        }
+    }
+    private void TeleportBehindWhiteBall()    {
+        if (ball == null) {
+            Debug.LogWarning("A referência à bola branca não foi definida.");
+            return;
+        }
+        Vector3 forwardDirection = aimPivotTransform.forward;
+        Vector3 targetPosition = ball.position - forwardDirection * offsetDistance;
+        playerTransform.position = targetPosition;
+        playerTransform.LookAt(ball);
     }
     private void ChargeLaunch(){
         // Aumenta a força de lançamento da bola enquanto o botão esquerdo do mouse é pressionado
